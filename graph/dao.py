@@ -105,14 +105,14 @@ class ScientistDAO(BaseDAO):
 
 def _get_paper_summary(paper: ResearchPaper):
     return (
-        "## TITLE:\n",
-        paper.title,
+        "## TITLE:\n"
+        f"{paper.title}"
 
-        "\n\n## ABSTRACT:\n",
-        paper.abstract,
+        "\n\n## ABSTRACT:\n"
+        f"{paper.abstract}"
 
-        "\n\n## PUBLISHED DATE:\n",
-        paper.published_date
+        "\n\n## PUBLISHED DATE:\n"
+        f"{paper.published_date}"
     )
 
 async def main(data_path: str):
@@ -138,7 +138,9 @@ async def main(data_path: str):
                 records[author].append(
                     ResearchPaper(
                         title=paper["title"],
-                        abstract=paper["abstract"]
+                        abstract=paper["abstract"],
+                        published_date=paper["published_date"],
+                        url=paper["link"],
                     )
                 )
 
@@ -178,6 +180,7 @@ async def main(data_path: str):
         papers = record[0]["papers"]
         scientist["summary"] = ""
         for i, paper in enumerate(papers, 1):
+            print(paper)
             scientist["summary"] += f"\n\n\n# PAPER {i}:\n" + _get_paper_summary(ResearchPaper(**paper))
         await scdao.add_summary_to_scientist(Scientist(**scientist))
 
