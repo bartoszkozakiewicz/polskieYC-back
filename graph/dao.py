@@ -73,7 +73,47 @@ class ScientistDAO(BaseDAO):
     async def add_scientist(self, scientist: Scientist):
         async with self.service.driver.session() as session:
             return await session.execute_write(self._add_scientist, scientist)
+    
+    async def _get_scientist_and_papers_by_scientist_name(self, tx, name: str):
+        query = (
+            "MATCH (scientist:Scientist {name: $name})-[:AUTHORED]->(paper:ResearchPaper) "
+            "RETURN scientist, collect(paper) as papers"
+        )
+        result = await tx.run(query, name=name)
+        return await result.data()
+    
+    async def get_scientist_and_papers_by_scientist_name(self, name: str):
+        async with self.service.driver.session() as session:
+            results = await session.execute_read(self._get_scientist_and_papers_by_scientist_name, name=name)
+            return results
+                
+    def _add_summary_to_scientist(self, tx, scientist: Scientist):
+        new_scientist = scientist.model_copy()
+        new_scientist.summary = None
+        model_args = _model_to_neo4j_args(new_scientist)
+        query = (
+            f"MATCH (scientist:Scientist {model_args}) "
+            "SET scientist.summary = $summary "
+            "RETURN scientist"
+        )
+        return tx.run(query, **scientist.to_dict())
+    
+    async def add_summary_to_scientist(self, scientist: Scientist):
+        async with self.service.driver.session() as session:
+            return await session.execute_write(self._add_summary_to_scientist, scientist)
 
+
+def _get_paper_summary(paper: ResearchPaper):
+    return (
+        "## TITLE:\n",
+        paper.title,
+
+        "\n\n## ABSTRACT:\n",
+        paper.abstract,
+
+        "\n\n## PUBLISHED DATE:\n",
+        paper.published_date
+    )
 
 async def main(data_path: str):
     service = Neo4jService(
@@ -123,6 +163,24 @@ async def main(data_path: str):
             affiliation="Warsaw University of Technology"
         )
         await rpdao.add_all_papers_from_scientist(scientist, papers)
+
+    logger.info("Fetching all papers by scientist")
+    tasks = []
+    for scientist_name in records.keys():
+        task = scdao.get_scientist_and_papers_by_scientist_name(scientist_name)
+        tasks.append(task)
+    results = await asyncio.gather(*tasks)
+
+    logger.info("Generating description of the scientists")
+    for record in results:
+        assert len(record) == 1
+        scientist = record[0]["scientist"]
+        papers = record[0]["papers"]
+        scientist["summary"] = ""
+        for i, paper in enumerate(papers, 1):
+            scientist["summary"] += f"\n\n\n# PAPER {i}:\n" + _get_paper_summary(ResearchPaper(**paper))
+        await scdao.add_summary_to_scientist(Scientist(**scientist))
+
 
     await scdao.close()
         
