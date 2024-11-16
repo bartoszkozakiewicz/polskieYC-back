@@ -1,6 +1,7 @@
 import arxiv
 from unidecode import unidecode
 import json
+from tqdm import tqdm
 
 
 def fetch_arxiv_papers(query, max_results=100):
@@ -38,18 +39,29 @@ def prepare_author_query(author):
     name, surname = author.split(" ", 1)
     surname = "_".join(surname.split())
     return f"au:{unidecode(surname).lower()}_{unidecode(name).lower()}"
-    
+
+
+def prepare_rg_suffix(author):
+    name, surname = author.split(" ", 1)
+    surname = "-".join(surname.split())
+    return f"{unidecode(name)}-{unidecode(surname)}"
+
 
 if __name__ == "__main__":
     authors = get_authors()
 
-    query = prepare_author_query(authors[0])
-    papers = fetch_arxiv_papers(query, max_results=20)
     # title, authors, published_date, link, abstract
 
-    result = {authors[0]: papers}
+    result = {}
 
-    with open("trzcinski.json", "w", encoding="utf-8") as json_file:
+    for author in tqdm(authors):
+        query = prepare_author_query(author)
+        papers = fetch_arxiv_papers(query, max_results=20)
+        rg_suffix = prepare_rg_suffix(author)
+        result[author] = {"researchgate": f"https://www.researchgate.net/profile/{rg_suffix}", "papers": papers}
+
+
+    with open("papers.json", "w", encoding="utf-8") as json_file:
         json.dump(result, json_file, indent=4, ensure_ascii=False)
     
 
