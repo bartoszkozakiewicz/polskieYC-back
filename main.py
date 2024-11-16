@@ -13,19 +13,21 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
+    return {"message": "root"}
+
+
+@app.get("/test")
+async def test():
     return {"message": "Hello World"}
 
 
 @app.get("/search/{user_type}")
-async def get_model(user_type: UserType):
+async def search(user_type: UserType):
     if user_type is UserType.investors:
-        return {"msg": "test"}
+        return {"message": "investors"}
 
     elif user_type is UserType.academia:
-        return {"msg": "test"}
+        return {"message": "academia"}
 
     elif user_type is UserType.business:
-        return {"msg": "test"}
-
-
-
+        return {"message": "business"}
