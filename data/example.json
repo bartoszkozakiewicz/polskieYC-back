@@ -1,0 +1,272 @@
+{
+    "Tomasz Trzciński": [
+        {
+            "title": "Exploring the Stability Gap in Continual Learning: The Role of the Classification Head",
+            "authors": [
+                "Wojciech Łapacz",
+                "Daniel Marczak",
+                "Filip Szatkowski",
+                "Tomasz Trzciński"
+            ],
+            "published_date": "2024-11-06",
+            "link": "http://arxiv.org/abs/2411.04723v1",
+            "abstract": "Continual learning (CL) has emerged as a critical area in machine learning,\nenabling neural networks to learn from evolving data distributions while\nmitigating catastrophic forgetting. However, recent research has identified the\nstability gap -- a phenomenon where models initially lose performance on\npreviously learned tasks before partially recovering during training. Such\nlearning dynamics are contradictory to the intuitive understanding of stability\nin continual learning where one would expect the performance to degrade\ngradually instead of rapidly decreasing and then partially recovering later. To\nbetter understand and alleviate the stability gap, we investigate it at\ndifferent levels of the neural network architecture, particularly focusing on\nthe role of the classification head. We introduce the nearest-mean classifier\n(NMC) as a tool to attribute the influence of the backbone and the\nclassification head on the stability gap. Our experiments demonstrate that NMC\nnot only improves final performance, but also significantly enhances training\nstability across various continual learning benchmarks, including CIFAR100,\nImageNet100, CUB-200, and FGVC Aircrafts. Moreover, we find that NMC also\nreduces task-recency bias. Our analysis provides new insights into the\nstability gap and suggests that the primary contributor to this phenomenon is\nthe linear head, rather than the insufficient representation learning."
+        },
+        {
+            "title": "Task-recency bias strikes back: Adapting covariances in Exemplar-Free Class Incremental Learning",
+            "authors": [
+                "Grzegorz Rypeść",
+                "Sebastian Cygert",
+                "Tomasz Trzciński",
+                "Bartłomiej Twardowski"
+            ],
+            "published_date": "2024-09-26",
+            "link": "http://arxiv.org/abs/2409.18265v2",
+            "abstract": "Exemplar-Free Class Incremental Learning (EFCIL) tackles the problem of\ntraining a model on a sequence of tasks without access to past data. Existing\nstate-of-the-art methods represent classes as Gaussian distributions in the\nfeature extractor's latent space, enabling Bayes classification or training the\nclassifier by replaying pseudo features. However, we identify two critical\nissues that compromise their efficacy when the feature extractor is updated on\nincremental tasks. First, they do not consider that classes' covariance\nmatrices change and must be adapted after each task. Second, they are\nsusceptible to a task-recency bias caused by dimensionality collapse occurring\nduring training. In this work, we propose AdaGauss -- a novel method that\nadapts covariance matrices from task to task and mitigates the task-recency\nbias owing to the additional anti-collapse loss function. AdaGauss yields\nstate-of-the-art results on popular EFCIL benchmarks and datasets when training\nfrom scratch or starting from a pre-trained backbone. The code is available at:\nhttps://github.com/grypesc/AdaGauss."
+        },
+        {
+            "title": "TabMixer: Noninvasive Estimation of the Mean Pulmonary Artery Pressure via Imaging and Tabular Data Mixing",
+            "authors": [
+                "Michal K. Grzeszczyk",
+                "Przemysław Korzeniowski",
+                "Samer Alabed",
+                "Andrew J. Swift",
+                "Tomasz Trzciński",
+                "Arkadiusz Sitek"
+            ],
+            "published_date": "2024-09-11",
+            "link": "http://arxiv.org/abs/2409.07564v1",
+            "abstract": "Right Heart Catheterization is a gold standard procedure for diagnosing\nPulmonary Hypertension by measuring mean Pulmonary Artery Pressure (mPAP). It\nis invasive, costly, time-consuming and carries risks. In this paper, for the\nfirst time, we explore the estimation of mPAP from videos of noninvasive\nCardiac Magnetic Resonance Imaging. To enhance the predictive capabilities of\nDeep Learning models used for this task, we introduce an additional modality in\nthe form of demographic features and clinical measurements. Inspired by\nall-Multilayer Perceptron architectures, we present TabMixer, a novel module\nenabling the integration of imaging and tabular data through spatial, temporal\nand channel mixing. Specifically, we present the first approach that utilizes\nMultilayer Perceptrons to interchange tabular information with imaging features\nin vision models. We test TabMixer for mPAP estimation and show that it\nenhances the performance of Convolutional Neural Networks, 3D-MLP and Vision\nTransformers while being competitive with previous modules for imaging and\ntabular data. Our approach has the potential to improve clinical processes\ninvolving both modalities, particularly in noninvasive mPAP estimation, thus,\nsignificantly enhancing the quality of life for individuals affected by\nPulmonary Hypertension. We provide a source code for using TabMixer at\nhttps://github.com/SanoScience/TabMixer."
+        },
+        {
+            "title": "LumiGauss: High-Fidelity Outdoor Relighting with 2D Gaussian Splatting",
+            "authors": [
+                "Joanna Kaleta",
+                "Kacper Kania",
+                "Tomasz Trzcinski",
+                "Marek Kowalski"
+            ],
+            "published_date": "2024-08-06",
+            "link": "http://arxiv.org/abs/2408.04474v1",
+            "abstract": "Decoupling lighting from geometry using unconstrained photo collections is\nnotoriously challenging. Solving it would benefit many users, as creating\ncomplex 3D assets takes days of manual labor. Many previous works have\nattempted to address this issue, often at the expense of output fidelity, which\nquestions the practicality of such methods.\n  We introduce LumiGauss, a technique that tackles 3D reconstruction of scenes\nand environmental lighting through 2D Gaussian Splatting. Our approach yields\nhigh-quality scene reconstructions and enables realistic lighting synthesis\nunder novel environment maps. We also propose a method for enhancing the\nquality of shadows, common in outdoor scenes, by exploiting spherical harmonics\nproperties. Our approach facilitates seamless integration with game engines and\nenables the use of fast precomputed radiance transfer.\n  We validate our method on the NeRF-OSR dataset, demonstrating superior\nperformance over baseline methods. Moreover, LumiGauss can synthesize realistic\nimages when applying novel environment maps."
+        },
+        {
+            "title": "Joint or Disjoint: Mixing Training Regimes for Early-Exit Models",
+            "authors": [
+                "Bartłomiej Krzepkowski",
+                "Monika Michaluk",
+                "Franciszek Szarwacki",
+                "Piotr Kubaty",
+                "Jary Pomponi",
+                "Tomasz Trzciński",
+                "Bartosz Wójcik",
+                "Kamil Adamczewski"
+            ],
+            "published_date": "2024-07-19",
+            "link": "http://arxiv.org/abs/2407.14320v1",
+            "abstract": "Early exits are an important efficiency mechanism integrated into deep neural\nnetworks that allows for the termination of the network's forward pass before\nprocessing through all its layers. By allowing early halting of the inference\nprocess for less complex inputs that reached high confidence, early exits\nsignificantly reduce the amount of computation required. Early exit methods add\ntrainable internal classifiers which leads to more intricacy in the training\nprocess. However, there is no consistent verification of the approaches of\ntraining of early exit methods, and no unified scheme of training such models.\nMost early exit methods employ a training strategy that either simultaneously\ntrains the backbone network and the exit heads or trains the exit heads\nseparately. We propose a training approach where the backbone is initially\ntrained on its own, followed by a phase where both the backbone and the exit\nheads are trained together. Thus, we advocate for organizing early-exit\ntraining strategies into three distinct categories, and then validate them for\ntheir performance and efficiency. In this benchmark, we perform both\ntheoretical and empirical analysis of early-exit training regimes. We study the\nmethods in terms of information flow, loss landscape and numerical rank of\nactivations and gauge the suitability of regimes for various architectures and\ndatasets."
+        },
+        {
+            "title": "Realistic Evaluation of Test-Time Adaptation Algorithms: Unsupervised Hyperparameter Selection",
+            "authors": [
+                "Sebastian Cygert",
+                "Damian Sójka",
+                "Tomasz Trzciński",
+                "Bartłomiej Twardowski"
+            ],
+            "published_date": "2024-07-19",
+            "link": "http://arxiv.org/abs/2407.14231v1",
+            "abstract": "Test-Time Adaptation (TTA) has recently emerged as a promising strategy for\ntackling the problem of machine learning model robustness under distribution\nshifts by adapting the model during inference without access to any labels.\nBecause of task difficulty, hyperparameters strongly influence the\neffectiveness of adaptation. However, the literature has provided little\nexploration into optimal hyperparameter selection. In this work, we tackle this\nproblem by evaluating existing TTA methods using surrogate-based hp-selection\nstrategies (which do not assume access to the test labels) to obtain a more\nrealistic evaluation of their performance. We show that some of the recent\nstate-of-the-art methods exhibit inferior performance compared to the previous\nalgorithms when using our more realistic evaluation setup. Further, we show\nthat forgetting is still a problem in TTA as the only method that is robust to\nhp-selection resets the model to the initial state at every step. We analyze\ndifferent types of unsupervised selection strategies, and while they work\nreasonably well in most scenarios, the only strategies that work consistently\nwell use some kind of supervision (either by a limited number of annotated test\nsamples or by using pretraining data). Our findings underscore the need for\nfurther research with more rigorous benchmarking by explicitly stating model\nselection strategies, to facilitate which we open-source our code."
+        },
+        {
+            "title": "Let Me DeCode You: Decoder Conditioning with Tabular Data",
+            "authors": [
+                "Tomasz Szczepański",
+                "Michal K. Grzeszczyk",
+                "Szymon Płotka",
+                "Arleta Adamowicz",
+                "Piotr Fudalej",
+                "Przemysław Korzeniowski",
+                "Tomasz Trzciński",
+                "Arkadiusz Sitek"
+            ],
+            "published_date": "2024-07-12",
+            "link": "http://arxiv.org/abs/2407.09437v1",
+            "abstract": "Training deep neural networks for 3D segmentation tasks can be challenging,\noften requiring efficient and effective strategies to improve model\nperformance. In this study, we introduce a novel approach, DeCode, that\nutilizes label-derived features for model conditioning to support the decoder\nin the reconstruction process dynamically, aiming to enhance the efficiency of\nthe training process. DeCode focuses on improving 3D segmentation performance\nthrough the incorporation of conditioning embedding with learned numerical\nrepresentation of 3D-label shape features. Specifically, we develop an\napproach, where conditioning is applied during the training phase to guide the\nnetwork toward robust segmentation. When labels are not available during\ninference, our model infers the necessary conditioning embedding directly from\nthe input data, thanks to a feed-forward network learned during the training\nphase. This approach is tested using synthetic data and cone-beam computed\ntomography (CBCT) images of teeth. For CBCT, three datasets are used: one\npublicly available and two in-house. Our results show that DeCode significantly\noutperforms traditional, unconditioned models in terms of generalization to\nunseen data, achieving higher accuracy at a reduced computational cost. This\nwork represents the first of its kind to explore conditioning strategies in 3D\ndata segmentation, offering a novel and more efficient method for leveraging\nannotated data. Our code, pre-trained models are publicly available at\nhttps://github.com/SanoScience/DeCode ."
+        },
+        {
+            "title": "MagMax: Leveraging Model Merging for Seamless Continual Learning",
+            "authors": [
+                "Daniel Marczak",
+                "Bartłomiej Twardowski",
+                "Tomasz Trzciński",
+                "Sebastian Cygert"
+            ],
+            "published_date": "2024-07-08",
+            "link": "http://arxiv.org/abs/2407.06322v2",
+            "abstract": "This paper introduces a continual learning approach named MagMax, which\nutilizes model merging to enable large pre-trained models to continuously learn\nfrom new data without forgetting previously acquired knowledge. Distinct from\ntraditional continual learning methods that aim to reduce forgetting during\ntask training, MagMax combines sequential fine-tuning with a maximum magnitude\nweight selection for effective knowledge integration across tasks. Our initial\ncontribution is an extensive examination of model merging techniques, revealing\nthat simple approaches like weight averaging and random weight selection\nsurprisingly hold up well in various continual learning contexts. More\nimportantly, we present MagMax, a novel model-merging strategy that enables\ncontinual learning of large pre-trained models for successive tasks. Our\nthorough evaluation demonstrates the superiority of MagMax in various\nscenarios, including class- and domain-incremental learning settings. The code\nis available at this URL: https://github.com/danielm1405/magmax."
+        },
+        {
+            "title": "A Study of Test-time Contrastive Concepts for Open-world, Open-vocabulary Semantic Segmentation",
+            "authors": [
+                "Monika Wysoczańska",
+                "Antonin Vobecky",
+                "Amaia Cardiel",
+                "Tomasz Trzciński",
+                "Renaud Marlet",
+                "Andrei Bursuc",
+                "Oriane Siméoni"
+            ],
+            "published_date": "2024-07-06",
+            "link": "http://arxiv.org/abs/2407.05061v1",
+            "abstract": "Recent VLMs, pre-trained on large amounts of image-text pairs to align both\nmodalities, have opened the way to open-vocabulary semantic segmentation. Given\nan arbitrary set of textual queries, image regions are assigned the closest\nquery in feature space. However, the usual setup expects the user to list all\npossible visual concepts that may occur in the image, typically all classes of\nbenchmark datasets, that act as negatives to each other. We consider here the\nmore challenging scenario of segmenting a single concept, given a textual\nprompt and nothing else. To achieve good results, besides contrasting with the\ngeneric 'background' text, we study different ways to generate query-specific\ntest-time contrastive textual concepts, which leverage either the distribution\nof text in the VLM's training set or crafted LLM prompts. We show the relevance\nof our approach using a new, specific metric."
+        },
+        {
+            "title": "AdaGlimpse: Active Visual Exploration with Arbitrary Glimpse Position and Scale",
+            "authors": [
+                "Adam Pardyl",
+                "Michał Wronka",
+                "Maciej Wołczyk",
+                "Kamil Adamczewski",
+                "Tomasz Trzciński",
+                "Bartosz Zieliński"
+            ],
+            "published_date": "2024-04-04",
+            "link": "http://arxiv.org/abs/2404.03482v2",
+            "abstract": "Active Visual Exploration (AVE) is a task that involves dynamically selecting\nobservations (glimpses), which is critical to facilitate comprehension and\nnavigation within an environment. While modern AVE methods have demonstrated\nimpressive performance, they are constrained to fixed-scale glimpses from rigid\ngrids. In contrast, existing mobile platforms equipped with optical zoom\ncapabilities can capture glimpses of arbitrary positions and scales. To address\nthis gap between software and hardware capabilities, we introduce AdaGlimpse.\nIt uses Soft Actor-Critic, a reinforcement learning algorithm tailored for\nexploration tasks, to select glimpses of arbitrary position and scale. This\napproach enables our model to rapidly establish a general awareness of the\nenvironment before zooming in for detailed analysis. Experimental results\ndemonstrate that AdaGlimpse surpasses previous methods across various visual\ntasks while maintaining greater applicability in realistic AVE scenarios."
+        },
+        {
+            "title": "Auxiliary Classifiers Improve Stability and Efficiency in Continual Learning",
+            "authors": [
+                "Filip Szatkowski",
+                "Fei Yang",
+                "Bartłomiej Twardowski",
+                "Tomasz Trzciński",
+                "Joost van de Weijer"
+            ],
+            "published_date": "2024-03-12",
+            "link": "http://arxiv.org/abs/2403.07404v2",
+            "abstract": "Continual learning is crucial for applications in dynamic environments, where\nmachine learning models must adapt to changing data distributions while\nretaining knowledge of previous tasks. Despite significant advancements,\ncatastrophic forgetting - where performance on earlier tasks degrades as new\ninformation is learned - remains a key challenge. In this work, we investigate\nthe stability of intermediate neural network layers during continual learning\nand explore how auxiliary classifiers (ACs) can leverage this stability to\nimprove performance. We show that early network layers remain more stable\nduring learning, particularly for older tasks, and that ACs applied to these\nlayers can outperform standard classifiers on past tasks. By integrating ACs\ninto several continual learning algorithms, we demonstrate consistent and\nsignificant performance improvements on standard benchmarks. Additionally, we\nexplore dynamic inference, showing that AC-augmented continual learning methods\ncan reduce computational costs by up to 60\\% while maintaining or exceeding the\naccuracy of standard methods. Our findings suggest that ACs offer a promising\navenue for enhancing continual learning models, providing both improved\nperformance and the ability to adapt the network computation in environments\nwhere such flexibility might be required."
+        },
+        {
+            "title": "GUIDE: Guidance-based Incremental Learning with Diffusion Models",
+            "authors": [
+                "Bartosz Cywiński",
+                "Kamil Deja",
+                "Tomasz Trzciński",
+                "Bartłomiej Twardowski",
+                "Łukasz Kuciński"
+            ],
+            "published_date": "2024-03-06",
+            "link": "http://arxiv.org/abs/2403.03938v2",
+            "abstract": "We introduce GUIDE, a novel continual learning approach that directs\ndiffusion models to rehearse samples at risk of being forgotten. Existing\ngenerative strategies combat catastrophic forgetting by randomly sampling\nrehearsal examples from a generative model. Such an approach contradicts\nbuffer-based approaches where sampling strategy plays an important role. We\npropose to bridge this gap by incorporating classifier guidance into the\ndiffusion process to produce rehearsal examples specifically targeting\ninformation forgotten by a continuously trained model. This approach enables\nthe generation of samples from preceding task distributions, which are more\nlikely to be misclassified in the context of recently encountered classes. Our\nexperimental results show that GUIDE significantly reduces catastrophic\nforgetting, outperforming conventional random sampling approaches and\nsurpassing recent state-of-the-art methods in continual learning with\ngenerative replay."
+        },
+        {
+            "title": "Overestimation, Overfitting, and Plasticity in Actor-Critic: the Bitter Lesson of Reinforcement Learning",
+            "authors": [
+                "Michal Nauman",
+                "Michał Bortkiewicz",
+                "Piotr Miłoś",
+                "Tomasz Trzciński",
+                "Mateusz Ostaszewski",
+                "Marek Cygan"
+            ],
+            "published_date": "2024-03-01",
+            "link": "http://arxiv.org/abs/2403.00514v2",
+            "abstract": "Recent advancements in off-policy Reinforcement Learning (RL) have\nsignificantly improved sample efficiency, primarily due to the incorporation of\nvarious forms of regularization that enable more gradient update steps than\ntraditional agents. However, many of these techniques have been tested in\nlimited settings, often on tasks from single simulation benchmarks and against\nwell-known algorithms rather than a range of regularization approaches. This\nlimits our understanding of the specific mechanisms driving RL improvements. To\naddress this, we implemented over 60 different off-policy agents, each\nintegrating established regularization techniques from recent state-of-the-art\nalgorithms. We tested these agents across 14 diverse tasks from 2 simulation\nbenchmarks, measuring training metrics related to overestimation, overfitting,\nand plasticity loss -- issues that motivate the examined regularization\ntechniques. Our findings reveal that while the effectiveness of a specific\nregularization setup varies with the task, certain combinations consistently\ndemonstrate robust and superior performance. Notably, a simple Soft\nActor-Critic agent, appropriately regularized, reliably finds a\nbetter-performing policy within the training regime, which previously was\nachieved mainly through model-based approaches."
+        },
+        {
+            "title": "Divide and not forget: Ensemble of selectively trained experts in Continual Learning",
+            "authors": [
+                "Grzegorz Rypeść",
+                "Sebastian Cygert",
+                "Valeriya Khan",
+                "Tomasz Trzciński",
+                "Bartosz Zieliński",
+                "Bartłomiej Twardowski"
+            ],
+            "published_date": "2024-01-18",
+            "link": "http://arxiv.org/abs/2401.10191v3",
+            "abstract": "Class-incremental learning is becoming more popular as it helps models widen\ntheir applicability while not forgetting what they already know. A trend in\nthis area is to use a mixture-of-expert technique, where different models work\ntogether to solve the task. However, the experts are usually trained all at\nonce using whole task data, which makes them all prone to forgetting and\nincreasing computational burden. To address this limitation, we introduce a\nnovel approach named SEED. SEED selects only one, the most optimal expert for a\nconsidered task, and uses data from this task to fine-tune only this expert.\nFor this purpose, each expert represents each class with a Gaussian\ndistribution, and the optimal expert is selected based on the similarity of\nthose distributions. Consequently, SEED increases diversity and heterogeneity\nwithin the experts while maintaining the high stability of this ensemble\nmethod. The extensive experiments demonstrate that SEED achieves\nstate-of-the-art performance in exemplar-free settings across various\nscenarios, showing the potential of expert diversification through data in\ncontinual learning."
+        },
+        {
+            "title": "MISS: Multiclass Interpretable Scoring Systems",
+            "authors": [
+                "Michal K. Grzeszczyk",
+                "Tomasz Trzciński",
+                "Arkadiusz Sitek"
+            ],
+            "published_date": "2024-01-10",
+            "link": "http://arxiv.org/abs/2401.05069v1",
+            "abstract": "In this work, we present a novel, machine-learning approach for constructing\nMulticlass Interpretable Scoring Systems (MISS) - a fully data-driven\nmethodology for generating single, sparse, and user-friendly scoring systems\nfor multiclass classification problems. Scoring systems are commonly utilized\nas decision support models in healthcare, criminal justice, and other domains\nwhere interpretability of predictions and ease of use are crucial. Prior\nmethods for data-driven scoring, such as SLIM (Supersparse Linear Integer\nModel), were limited to binary classification tasks and extensions to\nmulticlass domains were primarily accomplished via one-versus-all-type\ntechniques. The scores produced by our method can be easily transformed into\nclass probabilities via the softmax function. We demonstrate techniques for\ndimensionality reduction and heuristics that enhance the training efficiency\nand decrease the optimality gap, a measure that can certify the optimality of\nthe model. Our approach has been extensively evaluated on datasets from various\ndomains, and the results indicate that it is competitive with other machine\nlearning models in terms of classification performance metrics and provides\nwell-calibrated class probabilities."
+        },
+        {
+            "title": "Infinite dSprites for Disentangled Continual Learning: Separating Memory Edits from Generalization",
+            "authors": [
+                "Sebastian Dziadzio",
+                "Çağatay Yıldız",
+                "Gido M. van de Ven",
+                "Tomasz Trzciński",
+                "Tinne Tuytelaars",
+                "Matthias Bethge"
+            ],
+            "published_date": "2023-12-27",
+            "link": "http://arxiv.org/abs/2312.16731v3",
+            "abstract": "The ability of machine learning systems to learn continually is hindered by\ncatastrophic forgetting, the tendency of neural networks to overwrite\npreviously acquired knowledge when learning a new task. Existing methods\nmitigate this problem through regularization, parameter isolation, or\nrehearsal, but they are typically evaluated on benchmarks comprising only a\nhandful of tasks. In contrast, humans are able to learn over long time horizons\nin dynamic, open-world environments, effortlessly memorizing unfamiliar objects\nand reliably recognizing them under various transformations. To make progress\ntowards closing this gap, we introduce Infinite dSprites, a parsimonious tool\nfor creating continual classification and disentanglement benchmarks of\narbitrary length and with full control over generative factors. We show that\nover a sufficiently long time horizon, the performance of all major types of\ncontinual learning methods deteriorates on this simple benchmark. This result\nhighlights an important and previously overlooked aspect of continual learning:\ngiven a finite modelling capacity and an arbitrarily long learning horizon,\nefficient learning requires memorizing class-specific information and\naccumulating knowledge about general mechanisms. In a simple setting with\ndirect supervision on the generative factors, we show how learning\nclass-agnostic transformations offers a way to circumvent catastrophic\nforgetting and improve classification accuracy over time. Our approach sets the\nstage for continual learning over hundreds of tasks with explicit control over\nmemorization and forgetting, emphasizing open-set classification and one-shot\ngeneralization."
+        },
+        {
+            "title": "Noninvasive Estimation of Mean Pulmonary Artery Pressure Using MRI, Computer Models, and Machine Learning",
+            "authors": [
+                "Michal K. Grzeszczyk",
+                "Tadeusz Satlawa",
+                "Angela Lungu",
+                "Andrew Swift",
+                "Andrew Narracott",
+                "Rod Hose",
+                "Tomasz Trzcinski",
+                "Arkadiusz Sitek"
+            ],
+            "published_date": "2023-12-21",
+            "link": "http://arxiv.org/abs/2312.14221v1",
+            "abstract": "Pulmonary Hypertension (PH) is a severe disease characterized by an elevated\npulmonary artery pressure. The gold standard for PH diagnosis is measurement of\nmean Pulmonary Artery Pressure (mPAP) during an invasive Right Heart\nCatheterization. In this paper, we investigate noninvasive approach to PH\ndetection utilizing Magnetic Resonance Imaging, Computer Models and Machine\nLearning. We show using the ablation study, that physics-informed feature\nengineering based on models of blood circulation increases the performance of\nGradient Boosting Decision Trees-based algorithms for classification of PH and\nregression of values of mPAP. We compare results of regression (with\nthresholding of estimated mPAP) and classification and demonstrate that metrics\nachieved in both experiments are comparable. The predicted mPAP values are more\ninformative to the physicians than the probability of PH returned by\nclassification models. They provide the intuitive explanation of the outcome of\nthe machine learning model (clinicians are accustomed to the mPAP metric,\ncontrary to the PH probability)."
+        },
+        {
+            "title": "Adapt & Align: Continual Learning with Generative Models Latent Space Alignment",
+            "authors": [
+                "Kamil Deja",
+                "Bartosz Cywiński",
+                "Jan Rybarczyk",
+                "Tomasz Trzciński"
+            ],
+            "published_date": "2023-12-21",
+            "link": "http://arxiv.org/abs/2312.13699v1",
+            "abstract": "In this work, we introduce Adapt & Align, a method for continual learning of\nneural networks by aligning latent representations in generative models. Neural\nNetworks suffer from abrupt loss in performance when retrained with additional\ntraining data from different distributions. At the same time, training with\nadditional data without access to the previous examples rarely improves the\nmodel's performance. In this work, we propose a new method that mitigates those\nproblems by employing generative models and splitting the process of their\nupdate into two parts. In the first one, we train a local generative model\nusing only data from a new task. In the second phase, we consolidate latent\nrepresentations from the local model with a global one that encodes knowledge\nof all past experiences. We introduce our approach with Variational\nAuteoncoders and Generative Adversarial Networks. Moreover, we show how we can\nuse those generative models as a general method for continual knowledge\nconsolidation that can be used in downstream tasks such as classification."
+        },
+        {
+            "title": "CLIP-DINOiser: Teaching CLIP a few DINO tricks for open-vocabulary semantic segmentation",
+            "authors": [
+                "Monika Wysoczańska",
+                "Oriane Siméoni",
+                "Michaël Ramamonjisoa",
+                "Andrei Bursuc",
+                "Tomasz Trzciński",
+                "Patrick Pérez"
+            ],
+            "published_date": "2023-12-19",
+            "link": "http://arxiv.org/abs/2312.12359v2",
+            "abstract": "The popular CLIP model displays impressive zero-shot capabilities thanks to\nits seamless interaction with arbitrary text prompts. However, its lack of\nspatial awareness makes it unsuitable for dense computer vision tasks, e.g.,\nsemantic segmentation, without an additional fine-tuning step that often uses\nannotations and can potentially suppress its original open-vocabulary\nproperties. Meanwhile, self-supervised representation methods have demonstrated\ngood localization properties without human-made annotations nor explicit\nsupervision. In this work, we take the best of both worlds and propose an\nopen-vocabulary semantic segmentation method, which does not require any\nannotations. We propose to locally improve dense MaskCLIP features, which are\ncomputed with a simple modification of CLIP's last pooling layer, by\nintegrating localization priors extracted from self-supervised features. By\ndoing so, we greatly improve the performance of MaskCLIP and produce smooth\noutputs. Moreover, we show that the used self-supervised feature properties can\ndirectly be learnt from CLIP features. Our method CLIP-DINOiser needs only a\nsingle forward pass of CLIP and two light convolutional layers at inference, no\nextra supervision nor extra memory and reaches state-of-the-art results on\nchallenging and fine-grained benchmarks such as COCO, Pascal Context,\nCityscapes and ADE20k. The code to reproduce our results is available at\nhttps://github.com/wysoczanska/clip_dinoiser."
+        },
+        {
+            "title": "Revisiting Supervision for Continual Representation Learning",
+            "authors": [
+                "Daniel Marczak",
+                "Sebastian Cygert",
+                "Tomasz Trzciński",
+                "Bartłomiej Twardowski"
+            ],
+            "published_date": "2023-11-22",
+            "link": "http://arxiv.org/abs/2311.13321v2",
+            "abstract": "In the field of continual learning, models are designed to learn tasks one\nafter the other. While most research has centered on supervised continual\nlearning, there is a growing interest in unsupervised continual learning, which\nmakes use of the vast amounts of unlabeled data. Recent studies have\nhighlighted the strengths of unsupervised methods, particularly self-supervised\nlearning, in providing robust representations. The improved transferability of\nthose representations built with self-supervised methods is often associated\nwith the role played by the multi-layer perceptron projector. In this work, we\ndepart from this observation and reexamine the role of supervision in continual\nrepresentation learning. We reckon that additional information, such as human\nannotations, should not deteriorate the quality of representations. Our\nfindings show that supervised models when enhanced with a multi-layer\nperceptron head, can outperform self-supervised models in continual\nrepresentation learning. This highlights the importance of the multi-layer\nperceptron projector in shaping feature transferability across a sequence of\ntasks in continual learning. The code is available on github:\nhttps://github.com/danielm1405/sl-vs-ssl-cl."
+        }
+    ]
+}
