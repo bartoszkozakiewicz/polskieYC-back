@@ -1,6 +1,6 @@
 import json
-from core import Neo4jService
-from schema import BaseSchema, ResearchPaper, Scientist, Problem
+from .core import Neo4jService
+from .schema import BaseSchema, ResearchPaper, Scientist, Problem
 import sys
 sys.path.append(".")
 from utils_embeddings import Embedder
@@ -123,6 +123,26 @@ class ScientistDAO(BaseDAO):
     async def add_embeddings_to_scientist(self, scientist: Scientist):
         async with self.service.driver.session() as session:
             return await session.execute_write(self._add_embeddings_to_scientist, scientist)
+        
+
+    async def _search_scientists_by_query(self, tx, query: str, n_results: int = 10):
+        embedded_question = await self.embedder.get_embeddings(query)
+        embedded_question = embedded_question[0]
+
+        query = (
+            "CALL db.index.vector.queryNodes('ScientistIndex', $limit, $embedded_question) YIELD node as scientist, score "
+            "RETURN scientist "
+            f"LIMIT {n_results}"
+        )
+        result = await tx.run(query, embedded_question=embedded_question, limit=n_results)
+        result = await result.data()
+        result = [{key: val for key, val in record["scientist"].items() if key != "embedding"} for record in result]
+        return result
+    
+    async def search_scientists_by_query(self, query: str, n_results: int = 10):
+        async with self.service.driver.session() as session:
+            results = await session.execute_read(self._search_scientists_by_query, query, n_results)
+            return results
 
 
 def _get_paper_summary(paper: ResearchPaper):
