@@ -218,8 +218,19 @@ class ProblemDAO(BaseDAO):
         )
         result = await tx.run(query, embedded_question=embedded_question, limit=n_results)
         result = await result.data()
-        print(result)
         result = [{key: val for key, val in record["problem"].items() if key != "embedding"} for record in result]
+
+        api_key = os.getenv("COHERE_API_KEY")
+        co = cohere.ClientV2(api_key=api_key)
+
+        results_for_reranker = [{"text": d["description"]} for d in result]
+        ordering = co.rerank(query=query,
+                    documents=results_for_reranker,
+                    top_n=n_results,
+                    model='rerank-english-v3.0').results
+        ordering = [o.index for o in ordering]
+        result = [result[i] for i in ordering]
+
         return result
     
     async def search_problems_by_query(self, query: str, n_results: int = 10):
