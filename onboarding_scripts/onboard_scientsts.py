@@ -1,10 +1,13 @@
 import sys
 import json
 sys.path.append(".")
+
+from openai import AsyncOpenAI
+
 from graph.core import Neo4jService
 from graph.schema import ResearchPaper, Scientist
 from graph.dao import ResearchPaperDAO, ScientistDAO
-from utils_embeddings import Embedder
+from utils_llms import Embedder, Describer
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -33,6 +36,7 @@ async def main(data_path: str):
 
     rpdao = ResearchPaperDAO(service)
     embedder = Embedder()
+    describer = Describer()
     scdao = ScientistDAO(service, embedder)
 
     with open(data_path, "r") as f:
@@ -83,21 +87,32 @@ async def main(data_path: str):
     results = await asyncio.gather(*tasks)
 
     logger.info("Generating description of the scientists")
+    tasks = []
     scientists = []
     for record in results:
         assert len(record) == 1
         scientist = record[0]["scientist"]
         papers = record[0]["papers"]
-        scientist["summary"] = ""
+        summary = ""
         for i, paper in enumerate(papers, 1):
-            scientist["summary"] += f"\n\n\n# PAPER {i}:\n" + _get_paper_summary(ResearchPaper(**paper))
+            summary += f"\n\n\n# PAPER {i}:\n" + _get_paper_summary(ResearchPaper(**paper))
+
+        tasks.append(describer.get_descriptions([summary]))
+        scientists.append(scientist)
+
+    descriptions = await asyncio.gather(*tasks)
+
+    new_scientists = []
+    for scientist, description in zip(scientists, descriptions):
+        scientist["summary"] = description[0] if isinstance(description, list) else description
         scientist = Scientist(**scientist)
         await scdao.add_summary_to_scientist(scientist)
-        scientists.append(scientist)
+        new_scientists.append(scientist)
 
     logger.info("Generating embeddings for scientists")
     tasks = []
-    for scientist in scientists:
+    for scientist in new_scientists:
+        scientist.embedding = None
         tasks.append(scdao.add_embeddings_to_scientist(scientist))
     await asyncio.gather(*tasks)
 
