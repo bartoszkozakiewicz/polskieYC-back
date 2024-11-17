@@ -1,4 +1,3 @@
-import json
 from .core import Neo4jService
 from .schema import BaseSchema, ResearchPaper, Scientist, Problem
 import sys
@@ -143,111 +142,75 @@ class ScientistDAO(BaseDAO):
         async with self.service.driver.session() as session:
             results = await session.execute_read(self._search_scientists_by_query, query, n_results)
             return results
-
-
-def _get_paper_summary(paper: ResearchPaper):
-    return (
-        "## TITLE:\n"
-        f"{paper.title}"
-
-        "\n\n## ABSTRACT:\n"
-        f"{paper.abstract}"
-
-        "\n\n## PUBLISHED DATE:\n"
-        f"{paper.published_date}"
-    )
-
-async def main(data_path: str):
-    service = Neo4jService(
-        os.getenv("NEO4J_URI"),
-        os.getenv("NEO4J_USER"),
-        os.getenv("NEO4J_PASSWORD"),
-        "neo4j"
-    )
-
-    rpdao = ResearchPaperDAO(service)
-    embedder = Embedder()
-    scdao = ScientistDAO(service, embedder)
-
-    with open(data_path, "r") as f:
-        data = json.load(f)
-
-    records: dict[str, list[ResearchPaper]] = dict()
-    for _, papers in data.items():
-        for paper in papers:
-            for author in paper["authors"]:
-                if author not in records:
-                    records[author] = []
-                records[author].append(
-                    ResearchPaper(
-                        title=paper["title"],
-                        abstract=paper["abstract"],
-                        published_date=paper["published_date"],
-                        url=paper["link"],
-                    )
-                )
-
-    logger.info("Adding scientists to the database")
-    tasks = []
-    for scientist_name in records.keys():
-        scientist = Scientist(
-            name=scientist_name,
-            email=f"{scientist_name.replace(' ', '')}@pw.edu.pl",
-            affiliation="Warsaw University of Technology"
-        )
-        task = scdao.add_scientist(scientist)
-        tasks.append(task)
-    await asyncio.gather(*tasks)
-
-    logger.info("Adding papers to the database")
-    tasks = []
-    for scientist_name, papers in records.items():
-        scientist = Scientist(
-            name=scientist_name,
-            email=f"{scientist_name.replace(' ', '')}@pw.edu.pl",
-            affiliation="Warsaw University of Technology"
-        )
-        await rpdao.add_all_papers_from_scientist(scientist, papers)
-
-    logger.info("Fetching all papers by scientist")
-    tasks = []
-    for scientist_name in records.keys():
-        task = scdao.get_scientist_and_papers_by_scientist_name(scientist_name)
-        tasks.append(task)
-    results = await asyncio.gather(*tasks)
-
-    logger.info("Generating description of the scientists")
-    scientists = []
-    for record in results:
-        assert len(record) == 1
-        scientist = record[0]["scientist"]
-        papers = record[0]["papers"]
-        scientist["summary"] = ""
-        for i, paper in enumerate(papers, 1):
-            scientist["summary"] += f"\n\n\n# PAPER {i}:\n" + _get_paper_summary(ResearchPaper(**paper))
-        scientist = Scientist(**scientist)
-        await scdao.add_summary_to_scientist(scientist)
-        scientists.append(scientist)
-
-    logger.info("Generating embeddings for scientists")
-    tasks = []
-    for scientist in scientists:
-        tasks.append(scdao.add_embeddings_to_scientist(scientist))
-    await asyncio.gather(*tasks)
-
-    await scdao.close()
         
+
+class ProblemDAO(BaseDAO):
+    def __init__(self, service: Neo4jService, embedder: Embedder):
+        super().__init__(service)
+        self.embedder = embedder
+
+    def _add_problem(self, tx, problem: Problem):
+        model_args = _model_to_neo4j_args(problem)
+        query = (
+            f"MERGE (problem:Problem {model_args}) "
+            "RETURN problem"
+        )
+        return tx.run(query, **problem.to_dict())
     
+    async def add_problem(self, problem: Problem):
+        async with self.service.driver.session() as session:
+            return await session.execute_write(self._add_problem, problem)
+        
+    async def _get_all_problems_without_embeddings(self, tx):
+        query = (
+            "MATCH (p:Problem) WHERE p.embedding IS NULL RETURN p "
+        )
+        result = await tx.run(query)
+        return await result.data()
+    
+    async def get_all_problems_without_embeddings(self):
+        async with self.service.driver.session() as session:
+            results = await session.execute_read(self._get_all_problems_without_embeddings)
+            results = [Problem(**record["p"]) for record in results]
+            return results
+        
 
-if __name__ == "__main__":
-    from dotenv import load_dotenv
-    load_dotenv()
-    import os
-    import sys
-    import asyncio
+    async def _add_embeddings_to_problem(self, tx, problem: Problem):
+        model_args = _model_to_neo4j_args(problem)
 
-    data_path = "./data/example.json"
-    asyncio.run(main(data_path))
+        embedding = await self.embedder.get_embeddings(problem.description)
+        embedding = embedding[0]
+        kwargs = {key: val for key, val in problem.to_dict().items() if val is not None}
 
-    # example
+        query = (
+            f"MATCH (problem:Problem {model_args}) "
+            "SET problem.embedding = $embedding "
+            "RETURN problem"
+        )
+        return await tx.run(query, **kwargs, embedding=embedding)
+    
+    async def add_embeddings_to_problem(self, problem: Problem):
+        async with self.service.driver.session() as session:
+            return await session.execute_write(self._add_embeddings_to_problem, problem)
+        
+    async def _search_problems_by_query(self, tx, query: str, n_results: int = 10):
+        embedded_question = await self.embedder.get_embeddings(query)
+        embedded_question = embedded_question[0]
+
+        query = (
+            "CALL db.index.vector.queryNodes('ProblemIndex', $limit, $embedded_question) YIELD node as problem, score "
+            "RETURN problem "
+            f"LIMIT {n_results}"
+        )
+        result = await tx.run(query, embedded_question=embedded_question, limit=n_results)
+        result = await result.data()
+        result = [{key: val for key, val in record["problem"].items() if key != "embedding"} for record in result]
+        return result
+    
+    async def search_problems_by_query(self, query: str, n_results: int = 10):
+        async with self.service.driver.session() as session:
+            results = await session.execute_read(self._search_problems_by_query, query, n_results)
+            return results
+        
+
         

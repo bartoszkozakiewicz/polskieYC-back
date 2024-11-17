@@ -28,8 +28,11 @@ class Scientist(BaseSchema):
 
 
 class Problem(BaseSchema):
+    name: str = Field(..., title="Name of the problem")
     description: str = Field(..., title="Description of the problem")
+    industry: Optional[str] = Field(None, title="Industry of the problem")
     tags: Optional[list[str]] = Field(None, title="Tags of the problem")
+    company: Optional[str] = Field(None, title="Company of the problem")
     embedding: Optional[list[float]] = Field(None, title="Embedding of the problem")
 
 

@@ -1,9 +1,10 @@
+from typing import Optional
 from enum import Enum
 import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from graph.dao import ScientistDAO
+from graph.dao import ScientistDAO, ProblemDAO
 from graph.core import Neo4jService
 from utils_embeddings import Embedder
 
@@ -11,15 +12,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class UserType(str, Enum):
-    investors = "investors"
-    academia = "academia"
-    business = "business"
+    projects = "Projects"
+    researchers = "Researchers"
+    business = "Businesses"
 
 
 class SearchRequest(BaseModel):
-    user_type: UserType
+    user_type: str
     query: str
-    n_results: int = Field(10, ge=1, le=100)
+    n_results: Optional[int] = Field(10, ge=1, le=100)
 
 
 app = FastAPI()
@@ -38,8 +39,8 @@ async def test():
 @app.post("/search")
 async def search(request: SearchRequest):
     responses = {
-        UserType.investors: "investors",
-        UserType.academia: "academia",
+        UserType.projects: "projects",
+        UserType.researchers: "researchers",
         UserType.business: "business",
     }
     
@@ -48,18 +49,25 @@ async def search(request: SearchRequest):
     if not user_message:
         raise HTTPException(status_code=400, detail="Invalid user type")
     
-    # Placeholder for actual search logic
-    if user_message == "academia":
-        service = Neo4jService(
-            os.getenv("NEO4J_URI"),
-            os.getenv("NEO4J_USER"),
-            os.getenv("NEO4J_PASSWORD"),
-            "neo4j"
-        )
-        embedder = Embedder()
+    service = Neo4jService(
+        os.getenv("NEO4J_URI"),
+        os.getenv("NEO4J_USER"),
+        os.getenv("NEO4J_PASSWORD"),
+        "neo4j"
+    )
+    embedder = Embedder()
+    if user_message == "researchers":
         scdao = ScientistDAO(service, embedder) 
         search_results = await scdao.search_scientists_by_query(request.query, request.n_results)
-        return {"user_type": user_message, "query": request.query, "results": search_results}
+        to_ret = {"user_type": user_message, "query": request.query, "results": search_results}
+    elif user_message == "projects":
+        pdao = ProblemDAO(service, embedder)
+        search_results = await pdao.search_problems_by_query(request.query, request.n_results)
+        to_ret = {"user_type": user_message, "query": request.query, "results": search_results}
+    else:
+        to_ret = {"user_type": user_message, "query": request.query, "results": []}
+    print(to_ret)
+    return to_ret
 
 
     return {"user_type": user_message, "query": request.query, "results": search_results}
