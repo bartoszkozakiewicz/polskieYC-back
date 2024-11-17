@@ -1,5 +1,8 @@
+import os
+
 from .core import Neo4jService
 from .schema import BaseSchema, ResearchPaper, Scientist, Problem
+import cohere
 import sys
 sys.path.append(".")
 from utils_llms import Embedder
@@ -131,11 +134,23 @@ class ScientistDAO(BaseDAO):
         query = (
             "CALL db.index.vector.queryNodes('ScientistIndex', $limit, $embedded_question) YIELD node as scientist, score "
             "RETURN scientist "
-            f"LIMIT {n_results}"
         )
-        result = await tx.run(query, embedded_question=embedded_question, limit=n_results)
+
+        result = await tx.run(query, embedded_question=embedded_question, limit=n_results*2)
         result = await result.data()
         result = [{key: val for key, val in record["scientist"].items() if key != "embedding"} for record in result]
+
+        api_key = os.getenv("COHERE_API_KEY")
+        co = cohere.ClientV2(api_key=api_key)
+
+        results_for_reranker = [{"text": d["summary"]} for d in result]
+        ordering = co.rerank(query=query,
+                    documents=results_for_reranker,
+                    top_n=n_results,
+                    model='rerank-english-v3.0').results
+        ordering = [o.index for o in ordering]
+        result = [result[i] for i in ordering]
+        
         return result
     
     async def search_scientists_by_query(self, query: str, n_results: int = 10):
@@ -199,11 +214,11 @@ class ProblemDAO(BaseDAO):
 
         query = (
             "CALL db.index.vector.queryNodes('ProblemIndex', $limit, $embedded_question) YIELD node as problem, score "
-            "RETURN problem "
-            f"LIMIT {n_results}"
+            "RETURN problem"
         )
         result = await tx.run(query, embedded_question=embedded_question, limit=n_results)
         result = await result.data()
+        print(result)
         result = [{key: val for key, val in record["problem"].items() if key != "embedding"} for record in result]
         return result
     
