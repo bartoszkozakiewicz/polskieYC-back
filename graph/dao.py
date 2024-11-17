@@ -1,6 +1,9 @@
 import json
 from core import Neo4jService
 from schema import BaseSchema, ResearchPaper, Scientist, Problem
+import sys
+sys.path.append(".")
+from utils_embeddings import Embedder
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -59,8 +62,9 @@ class ResearchPaperDAO(BaseDAO):
 
 
 class ScientistDAO(BaseDAO):
-    def __init__(self, service: Neo4jService):
+    def __init__(self, service: Neo4jService, embedder: Embedder):
         super().__init__(service)
+        self.embedder = embedder
 
     def _add_scientist(self, tx, scientist: Scientist):
         model_args = _model_to_neo4j_args(scientist)
@@ -101,6 +105,24 @@ class ScientistDAO(BaseDAO):
     async def add_summary_to_scientist(self, scientist: Scientist):
         async with self.service.driver.session() as session:
             return await session.execute_write(self._add_summary_to_scientist, scientist)
+        
+    async def _add_embeddings_to_scientist(self, tx, scientist: Scientist):
+        model_args = _model_to_neo4j_args(scientist)
+
+        embedding = await self.embedder.get_embeddings(scientist.summary)
+        embedding = embedding[0]
+        kwargs = {key: val for key, val in scientist.to_dict().items() if val is not None}
+
+        query = (
+            f"MATCH (scientist:Scientist {model_args}) "
+            "SET scientist.embedding = $embedding "
+            "RETURN scientist"
+        )
+        return await tx.run(query, **kwargs, embedding=embedding)
+    
+    async def add_embeddings_to_scientist(self, scientist: Scientist):
+        async with self.service.driver.session() as session:
+            return await session.execute_write(self._add_embeddings_to_scientist, scientist)
 
 
 def _get_paper_summary(paper: ResearchPaper):
@@ -124,7 +146,8 @@ async def main(data_path: str):
     )
 
     rpdao = ResearchPaperDAO(service)
-    scdao = ScientistDAO(service)
+    embedder = Embedder()
+    scdao = ScientistDAO(service, embedder)
 
     with open(data_path, "r") as f:
         data = json.load(f)
@@ -174,16 +197,23 @@ async def main(data_path: str):
     results = await asyncio.gather(*tasks)
 
     logger.info("Generating description of the scientists")
+    scientists = []
     for record in results:
         assert len(record) == 1
         scientist = record[0]["scientist"]
         papers = record[0]["papers"]
         scientist["summary"] = ""
         for i, paper in enumerate(papers, 1):
-            print(paper)
             scientist["summary"] += f"\n\n\n# PAPER {i}:\n" + _get_paper_summary(ResearchPaper(**paper))
-        await scdao.add_summary_to_scientist(Scientist(**scientist))
+        scientist = Scientist(**scientist)
+        await scdao.add_summary_to_scientist(scientist)
+        scientists.append(scientist)
 
+    logger.info("Generating embeddings for scientists")
+    tasks = []
+    for scientist in scientists:
+        tasks.append(scdao.add_embeddings_to_scientist(scientist))
+    await asyncio.gather(*tasks)
 
     await scdao.close()
         
