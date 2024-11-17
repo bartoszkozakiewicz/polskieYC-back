@@ -5,7 +5,7 @@ sys.path.append(".")
 from graph.schema import Problem
 from graph.core import Neo4jService
 from graph.dao import ProblemDAO
-from utils_embeddings import Embedder
+from utils_llms import Embedder
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 def _do_tasks_with_func(func, task_args_list=None, task_kwargs_list=None):
-    print("="*250)
     if not task_args_list and not task_kwargs_list:
         raise ValueError("Either task_args or task_kwargs_list must be provided")
     elif not task_args_list:
@@ -31,7 +30,6 @@ def _do_tasks_with_func(func, task_args_list=None, task_kwargs_list=None):
     for args, kwargs in zip(task_args_list, task_kwargs_list):
         if not isinstance(args, tuple):
             args = (args,)
-        # print(args, kwargs)
         tasks.append(func(*args, **kwargs))
     return asyncio.gather(*tasks)
 
@@ -55,7 +53,6 @@ async def main(business_problems_path):
 
     logger.info("Fetching problems from the graph")
     business_problems = await scdao.get_all_problems_without_embeddings()
-    print(business_problems)
     
     logger.info("Adding embeddings to the problem nodes")
     # _do_tasks_with_func(scdao.add_embeddings_to_problem, business_problems)

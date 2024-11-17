@@ -1,6 +1,6 @@
 from graph.core import Neo4jService
 from graph.dao import ResearchPaperDAO, ScientistDAO
-from utils_embeddings import Embedder
+from utils_llms import Embedder
 
 
 async def test_search(data_path: str):

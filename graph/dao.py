@@ -2,7 +2,7 @@ from .core import Neo4jService
 from .schema import BaseSchema, ResearchPaper, Scientist, Problem
 import sys
 sys.path.append(".")
-from utils_embeddings import Embedder
+from utils_llms import Embedder
 
 import logging
 logging.basicConfig(level=logging.INFO)
