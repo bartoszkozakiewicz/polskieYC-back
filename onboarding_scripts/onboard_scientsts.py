@@ -1,5 +1,6 @@
 import sys
 import json
+from typing import Any
 sys.path.append(".")
 
 from openai import AsyncOpenAI
@@ -42,9 +43,10 @@ async def main(data_path: str):
     with open(data_path, "r") as f:
         data = json.load(f)
 
-    records: dict[str, list[ResearchPaper]] = dict()
-    for _, papers in data.items():
-        for paper in papers:
+    records: dict[str, dict[str, Any]] = dict()
+    for person, values in data.items():
+        researchgate_url = values["researchgate"]
+        for paper in values["papers"]:
             for author in paper["authors"]:
                 if author not in records:
                     records[author] = []
@@ -127,7 +129,7 @@ if __name__ == "__main__":
     import sys
     import asyncio
 
-    data_path = "./data/example.json"
+    data_path = "./data/papers_long.json"
     asyncio.run(main(data_path))
 
     # example
