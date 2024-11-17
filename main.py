@@ -101,7 +101,9 @@ async def search(request: SearchProblemRequest):
     )
     embedder = Embedder()
     pdao = ProblemDAO(service, embedder)
-    search_results = await pdao.search_problems_by_query(json.dumps(request.user_data), request.n_results)
+
+    index = "CompanyProblemIndex" if user_message == "ceo" else "TrendingProblemIndex"
+    search_results = await pdao.search_problems_by_query(json.dumps(request.user_data), request.n_results, index)
     to_ret = {"user_type": user_message, "query": request.user_data, "results": search_results}
     print(to_ret)
     return to_ret

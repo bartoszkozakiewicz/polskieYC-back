@@ -208,12 +208,12 @@ class ProblemDAO(BaseDAO):
         async with self.service.driver.session() as session:
             return await session.execute_write(self._add_embeddings_to_problem, problem)
         
-    async def _search_problems_by_query(self, tx, query: str, n_results: int = 10):
+    async def _search_problems_by_query(self, tx, query: str, n_results: int = 10, index='ProblemIndex'):
         embedded_question = await self.embedder.get_embeddings(query)
         embedded_question = embedded_question[0]
 
         query = (
-            "CALL db.index.vector.queryNodes('ProblemIndex', $limit, $embedded_question) YIELD node as problem, score "
+            f"CALL db.index.vector.queryNodes('{index}', $limit, $embedded_question) YIELD node as problem, score "
             "RETURN problem"
         )
         result = await tx.run(query, embedded_question=embedded_question, limit=n_results)
@@ -233,9 +233,9 @@ class ProblemDAO(BaseDAO):
 
         return result
     
-    async def search_problems_by_query(self, query: str, n_results: int = 10):
+    async def search_problems_by_query(self, query: str, n_results: int = 10, index='ProblemIndex'):
         async with self.service.driver.session() as session:
-            results = await session.execute_read(self._search_problems_by_query, query, n_results)
+            results = await session.execute_read(self._search_problems_by_query, query, n_results, index)
             return results
         
 

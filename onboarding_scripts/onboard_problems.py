@@ -72,5 +72,5 @@ if __name__ == "__main__":
     import sys
     from dotenv import load_dotenv
     load_dotenv()
-    business_problems_path = "data/business_problems.json"
+    business_problems_path = "data/trending_problems.json"
     asyncio.run(main(business_problems_path))
